@@ -1,0 +1,9 @@
+*** Begin Patch
+*** Update File: interfaces/admin_interface.py
+@@
+-            "RDM Tickets de Fidélité": "create_tickets_section",
++            "Ticket de fidélité": "create_tickets_section",
+@@
+-            ("🎫", "RDM Tickets de Fidélité"),
++            ("🎫", "Ticket de fidélité"),
+*** End Patch

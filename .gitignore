@@ -1,0 +1,13 @@
+﻿# Ignorer bases de données et backups
+/data/*.db
+/data/*.db.bak
+
+# Python cache & venv
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Logs / temporaires
+*.log

@@ -1,4 +1,4 @@
-# interfaces/admin_interface.py
+﻿# interfaces/admin_interface.py
 
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog, filedialog
@@ -13,7 +13,7 @@ import platform
 import sqlite3
 import math
 
-# Bonus manager (optionnel — protège l'import si le fichier n'existe pas)
+# Bonus manager (optionnel â€” protÃ¨ge l'import si le fichier n'existe pas)
 try:
     from app.bonus_simple import BonusManager
 except Exception:
@@ -37,7 +37,7 @@ class AdminInterface:
         self.settings_entries = {}
         self.tariff_sub_sections_map = {}
 
-        # lists stockées en config
+        # lists stockÃ©es en config
         self.currencies = []
         self.serial_ports = []
 
@@ -50,10 +50,10 @@ class AdminInterface:
         # Bonus manager (si disponible)
         try:
             if BonusManager:
-                # on passe l'instance de DatabaseManager pour réutiliser la même connexion/config
+                # on passe l'instance de DatabaseManager pour rÃ©utiliser la mÃªme connexion/config
                 self.bonus_manager = BonusManager(self.db)
                 try:
-                    # tenter d'exécuter la migration (idempotent)
+                    # tenter d'exÃ©cuter la migration (idempotent)
                     self.bonus_manager.run_migrations()
                 except Exception:
                     pass
@@ -236,9 +236,9 @@ class AdminInterface:
         try:
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-            messagebox.showinfo("Exporté", f"Configuration exportée vers :\n{path}")
+            messagebox.showinfo("ExportÃ©", f"Configuration exportÃ©e vers :\n{path}")
         except Exception as e:
-            messagebox.showerror("Erreur", f"Impossible d'écrire le fichier : {e}")
+            messagebox.showerror("Erreur", f"Impossible d'Ã©crire le fichier : {e}")
 
     def import_config_from_file(self):
         path = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")], title="Importer configuration JSON")
@@ -251,12 +251,12 @@ class AdminInterface:
             messagebox.showerror("Erreur", f"Impossible de lire le fichier : {e}")
             return
         preview = tk.Toplevel(self.root)
-        preview.title("Prévisualisation import - Confirmer")
+        preview.title("PrÃ©visualisation import - Confirmer")
         preview.geometry("600x400")
         preview.transient(self.root)
         frm = ttk.Frame(preview, padding=10)
         frm.pack(fill=tk.BOTH, expand=True)
-        ttk.Label(frm, text="Prévisualisation des clés chargées (cliquez sur 'Confirmer' pour importer) :", style="Light.TLabel").pack(anchor=tk.W)
+        ttk.Label(frm, text="PrÃ©visualisation des clÃ©s chargÃ©es (cliquez sur 'Confirmer' pour importer) :", style="Light.TLabel").pack(anchor=tk.W)
         text = tk.Text(frm, wrap=tk.NONE)
         text.pack(fill=tk.BOTH, expand=True, pady=(6,6))
         for k, v in data.items():
@@ -277,7 +277,7 @@ class AdminInterface:
                             val = json.dumps(v)
                         cursor.execute("INSERT OR REPLACE INTO config (cle, valeur) VALUES (?, ?)", (k, str(val)))
                     conn.commit()
-                messagebox.showinfo("Importé", "Configuration importée avec succès.")
+                messagebox.showinfo("ImportÃ©", "Configuration importÃ©e avec succÃ¨s.")
                 self._load_lists_from_config()
                 self._refresh_currency_combobox()
                 self._refresh_serialport_combobox()
@@ -313,7 +313,7 @@ class AdminInterface:
         header_frame = tk.Frame(main_container, bg="#34495E", height=60)
         header_frame.pack(fill=tk.X, pady=(0,10))
         header_frame.pack_propagate(False)
-        title_label = tk.Label(header_frame, text="👑 RDM gSalle - Administration", font=("Arial", 20, "bold"), bg="#34495E", fg="white")
+        title_label = tk.Label(header_frame, text="ðŸ‘‘ RDM gSalle - Administration", font=("Arial", 20, "bold"), bg="#34495E", fg="white")
         title_label.pack(side=tk.LEFT, padx=20, pady=10)
         user_label = tk.Label(header_frame, text=f"Admin: {self.current_user_info['username']}", font=("Arial", 12), bg="#34495E", fg="#BDC3C7")
         user_label.pack(side=tk.RIGHT, padx=20, pady=10)
@@ -322,23 +322,23 @@ class AdminInterface:
         self.notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
         reports_tab = ttk.Frame(self.notebook, style="Light.TFrame")
-        self.notebook.add(reports_tab, text="📊 Rapports")
-        ttk.Label(reports_tab, text="Section Rapports (en développement)", font=("Arial", 14), style="Light.TLabel").pack(pady=50)
+        self.notebook.add(reports_tab, text="ðŸ“Š Rapports")
+        ttk.Label(reports_tab, text="Section Rapports (en dÃ©veloppement)", font=("Arial", 14), style="Light.TLabel").pack(pady=50)
 
         settings_main_tab = ttk.Frame(self.notebook, style="Light.TFrame")
-        self.notebook.add(settings_main_tab, text="⚙️ Paramètres Généraux")
+        self.notebook.add(settings_main_tab, text="âš™ï¸ ParamÃ¨tres GÃ©nÃ©raux")
         self.create_settings_main_tab(settings_main_tab)
 
         users_tab = ttk.Frame(self.notebook, style="Light.TFrame")
-        self.notebook.add(users_tab, text="👥 Gestion des Utilisateurs")
+        self.notebook.add(users_tab, text="ðŸ‘¥ Gestion des Utilisateurs")
         self.create_users_tab(users_tab)
 
         status_bar = tk.Frame(self.root, bg="#34495E", height=24)
         status_bar.pack(side=tk.BOTTOM, fill=tk.X)
         status_bar.pack_propagate(False)
-        self.status_label = tk.Label(status_bar, text="✅ Interface Administrateur chargée", font=("Arial", 9), bg="#34495E", fg="#27AE60")
+        self.status_label = tk.Label(status_bar, text="âœ… Interface Administrateur chargÃ©e", font=("Arial", 9), bg="#34495E", fg="#27AE60")
         self.status_label.pack(side=tk.LEFT, padx=15, pady=2)
-        logout_btn = tk.Button(status_bar, text="🚪 Déconnexion", command=self.logout, font=("Arial", 9, "bold"), bg="#E74C3C", fg="white", relief="flat", bd=0, padx=10, pady=2)
+        logout_btn = tk.Button(status_bar, text="ðŸšª DÃ©connexion", command=self.logout, font=("Arial", 9, "bold"), bg="#E74C3C", fg="white", relief="flat", bd=0, padx=10, pady=2)
         logout_btn.pack(side=tk.RIGHT, padx=15, pady=2)
 
     # ---------------- Users tab ----------------
@@ -351,25 +351,25 @@ class AdminInterface:
         ttk.Label(form_frame, text="Mot de passe:", style="Light.TLabel").pack(anchor=tk.W, pady=(0,5))
         self.password_entry = ttk.Entry(form_frame, width=30, show="*")
         self.password_entry.pack(fill=tk.X, pady=(0,10))
-        ttk.Label(form_frame, text="Rôle:", style="Light.TLabel").pack(anchor=tk.W, pady=(0,5))
+        ttk.Label(form_frame, text="RÃ´le:", style="Light.TLabel").pack(anchor=tk.W, pady=(0,5))
         self.role_var = tk.StringVar(value="manager")
         self.role_combo = ttk.Combobox(form_frame, textvariable=self.role_var, state="readonly", values=["manager", "co_admin", "admin"], width=28)
         self.role_combo.pack(fill=tk.X, pady=(0,10))
         btn_frame = ttk.Frame(form_frame, style="Light.TFrame")
         btn_frame.pack(fill=tk.X, pady=(10,0))
-        ttk.Button(btn_frame, text="➕ Ajouter", command=self.add_user).pack(side=tk.LEFT, padx=(0,5))
-        ttk.Button(btn_frame, text="💾 Modifier", command=self.update_user).pack(side=tk.LEFT, padx=(0,5))
-        ttk.Button(btn_frame, text="🗑️ Supprimer", command=self.delete_user).pack(side=tk.LEFT, padx=(0,5))
-        ttk.Button(btn_frame, text="✖️ Annuler", command=self.clear_user_form).pack(side=tk.LEFT)
+        ttk.Button(btn_frame, text="âž• Ajouter", command=self.add_user).pack(side=tk.LEFT, padx=(0,5))
+        ttk.Button(btn_frame, text="ðŸ’¾ Modifier", command=self.update_user).pack(side=tk.LEFT, padx=(0,5))
+        ttk.Button(btn_frame, text="ðŸ—‘ï¸ Supprimer", command=self.delete_user).pack(side=tk.LEFT, padx=(0,5))
+        ttk.Button(btn_frame, text="âœ–ï¸ Annuler", command=self.clear_user_form).pack(side=tk.LEFT)
         list_frame = ttk.LabelFrame(parent_tab, text="Liste des Utilisateurs", style="Light.TLabelFrame")
         list_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
-        self.users_tree = ttk.Treeview(list_frame, columns=("ID", "Nom d'utilisateur", "Rôle"), show="headings")
+        self.users_tree = ttk.Treeview(list_frame, columns=("ID", "Nom d'utilisateur", "RÃ´le"), show="headings")
         self.users_tree.heading("ID", text="ID")
         self.users_tree.heading("Nom d'utilisateur", text="Nom d'utilisateur")
-        self.users_tree.heading("Rôle", text="Rôle")
+        self.users_tree.heading("RÃ´le", text="RÃ´le")
         self.users_tree.column("ID", width=50, stretch=tk.NO)
         self.users_tree.column("Nom d'utilisateur", width=150, stretch=tk.YES)
-        self.users_tree.column("Rôle", width=100, stretch=tk.NO)
+        self.users_tree.column("RÃ´le", width=100, stretch=tk.NO)
         self.users_tree.pack(fill=tk.BOTH, expand=True)
         self.users_tree.bind("<<TreeviewSelect>>", self.on_user_select)
 
@@ -383,28 +383,28 @@ class AdminInterface:
         self.settings_sections_map = {
             "Tarification": "create_tarification_menu",
             "Bonus Simples": "create_bonus_simples_section",
-            "Ticket de fidélité": "create_tickets_section",
+            "Ticket de fidÃ©litÃ©": "create_tickets_section",
             "Titres de Joueur": "create_titres_section",
-            "Bonus Spéciaux": "create_bonus_speciaux_section",
+            "Bonus SpÃ©ciaux": "create_bonus_speciaux_section",
             "Abonnements": "create_abonnements_section",
         }
         menu_items = [
-            ("💰", "Tarification"),
-            ("🎁", "Bonus Simples"),
-            ("🎫", "Ticket de fidélité"),
-            ("🏆", "Titres de Joueur"),
-            ("✨", "Bonus Spéciaux"),
-            ("📦", "Abonnements"),
+            ("ðŸ’°", "Tarification"),
+            ("ðŸŽ", "Bonus Simples"),
+            ("ðŸŽ«", "Ticket de fidÃ©litÃ©"),
+            ("ðŸ†", "Titres de Joueur"),
+            ("âœ¨", "Bonus SpÃ©ciaux"),
+            ("ðŸ“¦", "Abonnements"),
         ]
         for icon, text_content in menu_items:
             btn = ttk.Button(self.settings_sidebar_frame, text=f"{icon} {text_content}", style="SettingsMenu.TButton",
                              command=lambda t=text_content: self.show_settings_section(t))
             btn.pack(fill=tk.X, pady=2, padx=(5,5))
-        save_btn = ttk.Button(self.settings_sidebar_frame, text="💾 Sauvegarder TOUS", style="SettingsMenu.TButton", command=self.save_general_settings)
+        save_btn = ttk.Button(self.settings_sidebar_frame, text="ðŸ’¾ Sauvegarder TOUS", style="SettingsMenu.TButton", command=self.save_general_settings)
         save_btn.pack(fill=tk.X, pady=(12,5), padx=5)
-        export_btn = ttk.Button(self.settings_sidebar_frame, text="⬇️ Exporter Config", style="SettingsMenu.TButton", command=self.export_config_to_file)
+        export_btn = ttk.Button(self.settings_sidebar_frame, text="â¬‡ï¸ Exporter Config", style="SettingsMenu.TButton", command=self.export_config_to_file)
         export_btn.pack(fill=tk.X, pady=(6,5), padx=5)
-        import_btn = ttk.Button(self.settings_sidebar_frame, text="⬆️ Importer Config", style="SettingsMenu.TButton", command=self.import_config_from_file)
+        import_btn = ttk.Button(self.settings_sidebar_frame, text="â¬†ï¸ Importer Config", style="SettingsMenu.TButton", command=self.import_config_from_file)
         import_btn.pack(fill=tk.X, pady=(0,10), padx=5)
         if self.settings_sections_map:
             first_section_name = list(self.settings_sections_map.keys())[0]
@@ -421,7 +421,7 @@ class AdminInterface:
             if section_name != "Tarification":
                 self.load_settings_for_current_section()
         else:
-            ttk.Label(self.settings_content_frame, text="Section non trouvée.", style="Light.TLabel").pack(pady=50)
+            ttk.Label(self.settings_content_frame, text="Section non trouvÃ©e.", style="Light.TLabel").pack(pady=50)
 
     # ---------------- Tarification menu ----------------
     def create_tarification_menu(self, parent):
@@ -430,19 +430,19 @@ class AdminInterface:
         tariff_menu_frame = ttk.Frame(tariff_main_container, style="Light.TFrame", width=300)
         tariff_menu_frame.pack(side=tk.LEFT, fill=tk.Y, padx=(10,0), pady=10)
         tariff_menu_frame.pack_propagate(False)
-        title_frame = ttk.LabelFrame(tariff_menu_frame, text="💰 Gestion de la Tarification", style="Light.TLabelFrame")
+        title_frame = ttk.LabelFrame(tariff_menu_frame, text="ðŸ’° Gestion de la Tarification", style="Light.TLabelFrame")
         title_frame.pack(fill=tk.X, pady=15, padx=5)
         self.tariff_sub_section_content_frame = ttk.Frame(tariff_main_container, style="Light.TFrame")
         self.tariff_sub_section_content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(0,10), pady=10)
         self.tariff_sub_sections_map = {
-            "Paramètres Généraux": "create_tarification_general_settings_section",
+            "ParamÃ¨tres GÃ©nÃ©raux": "create_tarification_general_settings_section",
             "Groupes de Consoles & Tarifs": "create_console_groups_section",
             "Gestion des Postes Physiques": "create_physical_postes_section",
         }
         sub_menu_items = [
-            ("⚙️", "Paramètres Généraux"),
-            ("🎮", "Groupes de Consoles & Tarifs"),
-            ("🖥️", "Gestion des Postes Physiques"),
+            ("âš™ï¸", "ParamÃ¨tres GÃ©nÃ©raux"),
+            ("ðŸŽ®", "Groupes de Consoles & Tarifs"),
+            ("ðŸ–¥ï¸", "Gestion des Postes Physiques"),
         ]
         for icon, text_content in sub_menu_items:
             btn = ttk.Button(tariff_menu_frame, text=f"{icon} {text_content}", style="TariffSubMenu.TButton",
@@ -462,13 +462,13 @@ class AdminInterface:
             # call load settings to populate the widgets that were created
             self.load_settings_for_current_section()
         else:
-            ttk.Label(self.tariff_sub_section_content_frame, text="Sous-section non trouvée.", style="Light.TLabel").pack(pady=50)
+            ttk.Label(self.tariff_sub_section_content_frame, text="Sous-section non trouvÃ©e.", style="Light.TLabel").pack(pady=50)
 
     # ---------------- Tarification General ----------------
     def create_tarification_general_settings_section(self, parent):
         frame = ttk.LabelFrame(parent, text="", style="Light.TLabelFrame")
         frame.pack(fill=tk.X, padx=10, pady=10)
-        ttk.Label(frame, text="⚙️ Paramètres Généraux de Tarification", font=("Arial", 12, "bold"), style="Light.TLabel").pack(anchor=tk.W, pady=(0,10))
+        ttk.Label(frame, text="âš™ï¸ ParamÃ¨tres GÃ©nÃ©raux de Tarification", font=("Arial", 12, "bold"), style="Light.TLabel").pack(anchor=tk.W, pady=(0,10))
         # Currency
         row_frame = ttk.Frame(frame)
         row_frame.pack(fill=tk.X, pady=(0,8))
@@ -476,21 +476,21 @@ class AdminInterface:
         self.devise_var = tk.StringVar()
         self.devise_combo = ttk.Combobox(row_frame, textvariable=self.devise_var, state="readonly", width=12)
         self.devise_combo.pack(side=tk.LEFT, padx=(0,6))
-        ttk.Button(row_frame, text="Gérer Devises", command=self.open_currency_manager).pack(side=tk.LEFT)
+        ttk.Button(row_frame, text="GÃ©rer Devises", command=self.open_currency_manager).pack(side=tk.LEFT)
         self.settings_entries['devise'] = self.devise_combo
-        ttk.Label(frame, text="(Ajouter / gérer les devises via 'Gérer Devises')", style="Light.TLabel").pack(anchor=tk.W, pady=(0,6))
+        ttk.Label(frame, text="(Ajouter / gÃ©rer les devises via 'GÃ©rer Devises')", style="Light.TLabel").pack(anchor=tk.W, pady=(0,6))
         # Serial port
         row_frame2 = ttk.Frame(frame)
         row_frame2.pack(fill=tk.X, pady=(6,8))
-        ttk.Label(row_frame2, text="Port Série actif:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,6))
+        ttk.Label(row_frame2, text="Port SÃ©rie actif:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,6))
         self.serial_port_var = tk.StringVar()
         self.serial_port_combo = ttk.Combobox(row_frame2, textvariable=self.serial_port_var, state="readonly", width=20)
         self.serial_port_combo.pack(side=tk.LEFT, padx=(0,6))
-        ttk.Button(row_frame2, text="Gérer Ports Série", command=self.open_serial_port_manager).pack(side=tk.LEFT, padx=(6,0))
-        ttk.Button(row_frame2, text="Détecter", command=self._detect_and_refresh_ports).pack(side=tk.LEFT, padx=(6,0))
+        ttk.Button(row_frame2, text="GÃ©rer Ports SÃ©rie", command=self.open_serial_port_manager).pack(side=tk.LEFT, padx=(6,0))
+        ttk.Button(row_frame2, text="DÃ©tecter", command=self._detect_and_refresh_ports).pack(side=tk.LEFT, padx=(6,0))
         ttk.Button(row_frame2, text="Scanner en fond", command=self.toggle_bg_scan).pack(side=tk.LEFT, padx=(6,0))
         self.settings_entries['serial_port_active'] = self.serial_port_combo
-        ttk.Label(frame, text="(Ports définis manuellement par l'admin, ou détectés)", style="Light.TLabel").pack(anchor=tk.W, pady=(0,6))
+        ttk.Label(frame, text="(Ports dÃ©finis manuellement par l'admin, ou dÃ©tectÃ©s)", style="Light.TLabel").pack(anchor=tk.W, pady=(0,6))
         # Baud
         ttk.Label(frame, text="Vitesse (Baud Rate):", style="Light.TLabel").pack(anchor=tk.W, pady=(6,4))
         self.baud_rate_var = tk.StringVar(value="9600")
@@ -503,7 +503,7 @@ class AdminInterface:
         self.standard_tariff_entry = ttk.Entry(frame, width=20)
         self.standard_tariff_entry.pack(fill=tk.X, pady=(0,10))
         self.settings_entries['standard_tariff_fcfa_per_6min'] = self.standard_tariff_entry
-        ttk.Label(frame, text="Les paramètres ci-dessus sont utilisés comme valeurs par défaut.", style="Light.TLabel").pack(anchor=tk.W, pady=(6,0))
+        ttk.Label(frame, text="Les paramÃ¨tres ci-dessus sont utilisÃ©s comme valeurs par dÃ©faut.", style="Light.TLabel").pack(anchor=tk.W, pady=(6,0))
         self._refresh_currency_combobox()
         self._refresh_serialport_combobox()
 
@@ -520,12 +520,12 @@ class AdminInterface:
         if added:
             self._set_config_json("serial_ports", self.serial_ports)
         self._refresh_serialport_combobox()
-        messagebox.showinfo("Détection terminée", f"{len(new_ports)} ports détectés, {added} ajoutés à la liste.")
+        messagebox.showinfo("DÃ©tection terminÃ©e", f"{len(new_ports)} ports dÃ©tectÃ©s, {added} ajoutÃ©s Ã  la liste.")
 
     # ---------------- Currency manager ----------------
     def open_currency_manager(self):
         dlg = tk.Toplevel(self.root)
-        dlg.title("Gérer Devises")
+        dlg.title("GÃ©rer Devises")
         dlg.transient(self.root)
         dlg.grab_set()
         dlg.geometry("360x320")
@@ -548,7 +548,7 @@ class AdminInterface:
                 messagebox.showerror("Erreur", "Entrez une devise.")
                 return
             if val in self.currencies:
-                messagebox.showerror("Erreur", "Cette devise existe déjà.")
+                messagebox.showerror("Erreur", "Cette devise existe dÃ©jÃ .")
                 return
             self.currencies.append(val)
             listbox.insert(tk.END, val)
@@ -559,7 +559,7 @@ class AdminInterface:
         def remove_currency():
             sel = listbox.curselection()
             if not sel:
-                messagebox.showerror("Erreur", "Sélectionnez une devise à supprimer.")
+                messagebox.showerror("Erreur", "SÃ©lectionnez une devise Ã  supprimer.")
                 return
             idx = sel[0]
             val = listbox.get(idx)
@@ -579,8 +579,8 @@ class AdminInterface:
 
         btns_frame = ttk.Frame(frm)
         btns_frame.pack(fill=tk.X, pady=(6,0))
-        ttk.Button(btns_frame, text="➕ Ajouter", command=add_currency).pack(side=tk.LEFT, padx=(0,6))
-        ttk.Button(btns_frame, text="🗑️ Supprimer", command=remove_currency).pack(side=tk.LEFT)
+        ttk.Button(btns_frame, text="âž• Ajouter", command=add_currency).pack(side=tk.LEFT, padx=(0,6))
+        ttk.Button(btns_frame, text="ðŸ—‘ï¸ Supprimer", command=remove_currency).pack(side=tk.LEFT)
         ttk.Button(btns_frame, text="Fermer", command=dlg.destroy).pack(side=tk.RIGHT)
 
     def _refresh_currency_combobox(self):
@@ -602,13 +602,13 @@ class AdminInterface:
     # ---------------- Serial port manager ----------------
     def open_serial_port_manager(self):
         dlg = tk.Toplevel(self.root)
-        dlg.title("Gérer Ports Série")
+        dlg.title("GÃ©rer Ports SÃ©rie")
         dlg.transient(self.root)
         dlg.grab_set()
         dlg.geometry("420x360")
         frm = ttk.Frame(dlg, padding=10)
         frm.pack(fill=tk.BOTH, expand=True)
-        ttk.Label(frm, text="Ports série définis:", style="Light.TLabel").pack(anchor=tk.W)
+        ttk.Label(frm, text="Ports sÃ©rie dÃ©finis:", style="Light.TLabel").pack(anchor=tk.W)
         listbox = tk.Listbox(frm, height=8)
         listbox.pack(fill=tk.BOTH, expand=True, pady=(6,6))
         for p in self.serial_ports:
@@ -625,7 +625,7 @@ class AdminInterface:
                 messagebox.showerror("Erreur", "Entrez un port (ex: COM3 ou /dev/ttyUSB0).")
                 return
             if val in self.serial_ports:
-                messagebox.showerror("Erreur", "Ce port existe déjà.")
+                messagebox.showerror("Erreur", "Ce port existe dÃ©jÃ .")
                 return
             self.serial_ports.append(val)
             listbox.insert(tk.END, val)
@@ -636,7 +636,7 @@ class AdminInterface:
         def remove_port():
             sel = listbox.curselection()
             if not sel:
-                messagebox.showerror("Erreur", "Sélectionnez un port à supprimer.")
+                messagebox.showerror("Erreur", "SÃ©lectionnez un port Ã  supprimer.")
                 return
             idx = sel[0]
             val = listbox.get(idx)
@@ -656,9 +656,9 @@ class AdminInterface:
 
         btns_frame = ttk.Frame(frm)
         btns_frame.pack(fill=tk.X, pady=(6,0))
-        ttk.Button(btns_frame, text="➕ Ajouter", command=add_port).pack(side=tk.LEFT, padx=(0,6))
-        ttk.Button(btns_frame, text="🗑️ Supprimer", command=remove_port).pack(side=tk.LEFT)
-        ttk.Button(btns_frame, text="Détecter", command=lambda: (listbox.delete(0, tk.END), self._do_detect_fill_listbox(listbox))).pack(side=tk.LEFT, padx=(6,0))
+        ttk.Button(btns_frame, text="âž• Ajouter", command=add_port).pack(side=tk.LEFT, padx=(0,6))
+        ttk.Button(btns_frame, text="ðŸ—‘ï¸ Supprimer", command=remove_port).pack(side=tk.LEFT)
+        ttk.Button(btns_frame, text="DÃ©tecter", command=lambda: (listbox.delete(0, tk.END), self._do_detect_fill_listbox(listbox))).pack(side=tk.LEFT, padx=(6,0))
         ttk.Button(btns_frame, text="Fermer", command=dlg.destroy).pack(side=tk.RIGHT)
 
     def _do_detect_fill_listbox(self, listbox_widget):
@@ -673,7 +673,7 @@ class AdminInterface:
         for p in self.serial_ports:
             listbox_widget.insert(tk.END, p)
         self._refresh_serialport_combobox()
-        messagebox.showinfo("Détecter", f"{len(new_ports)} détectés, {added} nouveaux ajoutés.")
+        messagebox.showinfo("DÃ©tecter", f"{len(new_ports)} dÃ©tectÃ©s, {added} nouveaux ajoutÃ©s.")
 
     def _refresh_serialport_combobox(self):
         try:
@@ -701,14 +701,14 @@ class AdminInterface:
 
     # ---------------- Console Groups & Tariffs ----------------
     def create_console_groups_section(self, parent):
-        frame = ttk.LabelFrame(parent, text="🎮 Groupes de Consoles & Tarifs", style="Light.TLabelFrame")
+        frame = ttk.LabelFrame(parent, text="ðŸŽ® Groupes de Consoles & Tarifs", style="Light.TLabelFrame")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # === FORMULAIRE GROUPE (sur 2 lignes pour éviter débordement) ===
+        # === FORMULAIRE GROUPE (sur 2 lignes pour Ã©viter dÃ©bordement) ===
         group_form_frame = ttk.Frame(frame, style="Light.TFrame")
         group_form_frame.pack(fill=tk.X, pady=(0,6))
 
-        # Ligne 1: Nom + Icône combobox
+        # Ligne 1: Nom + IcÃ´ne combobox
         row1 = ttk.Frame(group_form_frame, style="Light.TFrame")
         row1.pack(fill=tk.X, pady=(0,4))
 
@@ -717,30 +717,30 @@ class AdminInterface:
         self.group_name_entry.pack(side=tk.LEFT, padx=(0,15))
         self.settings_entries['current_group_name'] = self.group_name_entry
 
-        ttk.Label(row1, text="Icône:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,5))
+        ttk.Label(row1, text="IcÃ´ne:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,5))
         self.group_icon_var = tk.StringVar()
-        default_icons = ["🎮", "🕹️", "📺", "🔷", "🔶", "🟦", "🟪", "🟩", "PS2", "PS3", "PS4", "PS5", "XBOX"]
+        default_icons = ["ðŸŽ®", "ðŸ•¹ï¸", "ðŸ“º", "ðŸ”·", "ðŸ”¶", "ðŸŸ¦", "ðŸŸª", "ðŸŸ©", "PS2", "PS3", "PS4", "PS5", "XBOX"]
         self.group_icon_combo = ttk.Combobox(row1, textvariable=self.group_icon_var, values=default_icons, width=8)
         self.group_icon_combo.pack(side=tk.LEFT, padx=(0,6))
 
-        # Ligne 2: Icône personnalisée
+        # Ligne 2: IcÃ´ne personnalisÃ©e
         row2 = ttk.Frame(group_form_frame, style="Light.TFrame")
         row2.pack(fill=tk.X)
 
-        ttk.Label(row2, text="Ou icône personnalisée:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,5))
+        ttk.Label(row2, text="Ou icÃ´ne personnalisÃ©e:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,5))
         self.group_icon_custom_entry = ttk.Entry(row2, width=8)
         self.group_icon_custom_entry.pack(side=tk.LEFT, padx=(0,6))
         ttk.Label(row2, text="(Laisser vide pour utiliser la combobox)", style="Light.TLabel", foreground="#7F8C8D").pack(side=tk.LEFT)
 
-        # === BOUTONS D'ACTION (ligne dédiée, bien visible) ===
+        # === BOUTONS D'ACTION (ligne dÃ©diÃ©e, bien visible) ===
         group_buttons_frame = ttk.Frame(frame, style="Light.TFrame")
         group_buttons_frame.pack(fill=tk.X, pady=(8,8))
 
-        self.add_group_btn = ttk.Button(group_buttons_frame, text="➕ Ajouter Groupe", command=self.add_console_group, width=18)
+        self.add_group_btn = ttk.Button(group_buttons_frame, text="âž• Ajouter Groupe", command=self.add_console_group, width=18)
         self.add_group_btn.pack(side=tk.LEFT, padx=(0,6))
-        self.edit_group_btn = ttk.Button(group_buttons_frame, text="💾 Modifier Groupe", command=self.update_console_group, width=18)
+        self.edit_group_btn = ttk.Button(group_buttons_frame, text="ðŸ’¾ Modifier Groupe", command=self.update_console_group, width=18)
         self.edit_group_btn.pack(side=tk.LEFT, padx=(0,6))
-        self.delete_group_btn = ttk.Button(group_buttons_frame, text="🗑️ Supprimer Groupe", command=self.delete_console_group, width=18)
+        self.delete_group_btn = ttk.Button(group_buttons_frame, text="ðŸ—‘ï¸ Supprimer Groupe", command=self.delete_console_group, width=18)
         self.delete_group_btn.pack(side=tk.LEFT)
 
         # === LISTE DES GROUPES (fond blanc) ===
@@ -749,33 +749,33 @@ class AdminInterface:
         grp_list_scroll = ttk.Scrollbar(grp_list_frame, orient="vertical")
         grp_list_scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.console_groups_tree = ttk.Treeview(grp_list_frame, columns=("ID","Nom","Icône"), show="headings", selectmode="browse", height=8, style="White.Treeview")
+        self.console_groups_tree = ttk.Treeview(grp_list_frame, columns=("ID","Nom","IcÃ´ne"), show="headings", selectmode="browse", height=8, style="White.Treeview")
         self.console_groups_tree.heading("ID", text="ID", anchor=tk.W)
         self.console_groups_tree.heading("Nom", text="Nom du Groupe", anchor=tk.W)
-        self.console_groups_tree.heading("Icône", text="Icône", anchor=tk.W)
+        self.console_groups_tree.heading("IcÃ´ne", text="IcÃ´ne", anchor=tk.W)
         self.console_groups_tree.column("ID", width=40, stretch=tk.NO)
         self.console_groups_tree.column("Nom", width=150, stretch=tk.YES)
-        self.console_groups_tree.column("Icône", width=80, stretch=tk.NO)
+        self.console_groups_tree.column("IcÃ´ne", width=80, stretch=tk.NO)
         self.console_groups_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.console_groups_tree.config(yscrollcommand=grp_list_scroll.set)
         grp_list_scroll.config(command=self.console_groups_tree.yview)
 
         self.console_groups_tree.bind("<<TreeviewSelect>>", self.on_console_group_select)
 
-        # === SECTION TARIFS (SANS titre dupliqué) ===
-        tariff_grid_frame = ttk.LabelFrame(frame, text="📋 Grille Tarifaire du Groupe Sélectionné", style="Light.TLabelFrame")
+        # === SECTION TARIFS (SANS titre dupliquÃ©) ===
+        tariff_grid_frame = ttk.LabelFrame(frame, text="ðŸ“‹ Grille Tarifaire du Groupe SÃ©lectionnÃ©", style="Light.TLabelFrame")
         tariff_grid_frame.pack(fill=tk.BOTH, expand=True, pady=(10,0))
 
         tariff_btn_frame = ttk.Frame(tariff_grid_frame, style="Light.TFrame")
         tariff_btn_frame.pack(fill=tk.X, pady=(6,6), padx=4)
 
-        self.add_tariff_btn = ttk.Button(tariff_btn_frame, text="➕ Ajouter Tarif", command=self.add_tariff_entry, width=16)
+        self.add_tariff_btn = ttk.Button(tariff_btn_frame, text="âž• Ajouter Tarif", command=self.add_tariff_entry, width=16)
         self.add_tariff_btn.pack(side=tk.LEFT, padx=(0,6))
-        self.edit_tariff_btn = ttk.Button(tariff_btn_frame, text="💾 Modifier Tarif", command=self.update_tariff_entry, width=16)
+        self.edit_tariff_btn = ttk.Button(tariff_btn_frame, text="ðŸ’¾ Modifier Tarif", command=self.update_tariff_entry, width=16)
         self.edit_tariff_btn.pack(side=tk.LEFT, padx=(0,6))
-        self.delete_tariff_btn = ttk.Button(tariff_btn_frame, text="🗑️ Supprimer Tarif", command=self.delete_tariff_entry, width=16)
+        self.delete_tariff_btn = ttk.Button(tariff_btn_frame, text="ðŸ—‘ï¸ Supprimer Tarif", command=self.delete_tariff_entry, width=16)
         self.delete_tariff_btn.pack(side=tk.LEFT, padx=(0,6))
-        ttk.Button(tariff_btn_frame, text="🔃 Réordonner", command=self.reorder_tariffs_current_group, width=14).pack(side=tk.LEFT, padx=(6,0))
+        ttk.Button(tariff_btn_frame, text="ðŸ”ƒ RÃ©ordonner", command=self.reorder_tariffs_current_group, width=14).pack(side=tk.LEFT, padx=(6,0))
 
         tariffs_frame = ttk.Frame(tariff_grid_frame, style="Light.TFrame")
         tariffs_frame.pack(fill=tk.BOTH, expand=True, padx=4, pady=(0,6))
@@ -793,7 +793,7 @@ class AdminInterface:
 
         self.tariffs_tree.bind("<<TreeviewSelect>>", self.on_tariff_select)
 
-        # Chargement des données
+        # Chargement des donnÃ©es
         self.load_console_groups()
 
     def load_console_groups(self):
@@ -855,19 +855,19 @@ class AdminInterface:
                 cursor = conn.cursor()
                 cursor.execute("SELECT COUNT(*) FROM console_groups WHERE LOWER(name) = ?", (name.lower(),))
                 if cursor.fetchone()[0] > 0:
-                    messagebox.showerror("Erreur", f"Le groupe '{name}' existe déjà.")
+                    messagebox.showerror("Erreur", f"Le groupe '{name}' existe dÃ©jÃ .")
                     return
                 cursor.execute(
                     "INSERT INTO console_groups (name, icon, tariffs) VALUES (?, ?, ?)",
                     (name, icon, json.dumps([]))
                 )
                 conn.commit()
-            messagebox.showinfo("Succès", f"Groupe '{name}' ajouté.")
+            messagebox.showinfo("SuccÃ¨s", f"Groupe '{name}' ajoutÃ©.")
             self.load_console_groups()
             self.clear_console_group_form()
             self.load_console_group_names_for_combo()
         except sqlite3.IntegrityError:
-            messagebox.showerror("Erreur BD", f"Impossible d'ajouter le groupe '{name}' : nom déjà existant (contrainte UNIQUE).")
+            messagebox.showerror("Erreur BD", f"Impossible d'ajouter le groupe '{name}' : nom dÃ©jÃ  existant (contrainte UNIQUE).")
         except Exception as e:
             messagebox.showerror("Erreur BD", f"Impossible d'ajouter le groupe: {e}")
             print("[DEBUG] add_console_group exception:", e)
@@ -878,7 +878,7 @@ class AdminInterface:
         except Exception:
             sel = []
         if not sel:
-            messagebox.showerror("Erreur", "Veuillez sélectionner un groupe à modifier.")
+            messagebox.showerror("Erreur", "Veuillez sÃ©lectionner un groupe Ã  modifier.")
             return
         selected_item = sel[0]
         group_id = self.console_groups_tree.item(selected_item, 'values')[0]
@@ -893,11 +893,11 @@ class AdminInterface:
                 cursor.execute("SELECT id FROM console_groups WHERE LOWER(name) = ?", (name.lower(),))
                 row = cursor.fetchone()
                 if row and str(row[0]) != str(group_id):
-                    messagebox.showerror("Erreur", f"Impossible de renommer : le nom '{name}' est déjà utilisé par un autre groupe.")
+                    messagebox.showerror("Erreur", f"Impossible de renommer : le nom '{name}' est dÃ©jÃ  utilisÃ© par un autre groupe.")
                     return
                 cursor.execute("UPDATE console_groups SET name = ?, icon = ? WHERE id = ?", (name, icon, group_id))
                 conn.commit()
-            messagebox.showinfo("Succès", f"Groupe '{name}' modifié.")
+            messagebox.showinfo("SuccÃ¨s", f"Groupe '{name}' modifiÃ©.")
             self.load_console_groups()
             # reselect same id if present
             for iid in self.console_groups_tree.get_children():
@@ -924,12 +924,12 @@ class AdminInterface:
         except Exception:
             sel = []
         if not sel:
-            messagebox.showerror("Erreur", "Veuillez sélectionner un groupe à supprimer.")
+            messagebox.showerror("Erreur", "Veuillez sÃ©lectionner un groupe Ã  supprimer.")
             return
         selected_item = sel[0]
         group_id = self.console_groups_tree.item(selected_item, 'values')[0]
         group_name = self.console_groups_tree.item(selected_item, 'values')[1]
-        if messagebox.askyesno("Confirmer Suppression", f"Êtes-vous sûr de vouloir supprimer le groupe '{group_name}' ?"):
+        if messagebox.askyesno("Confirmer Suppression", f"ÃŠtes-vous sÃ»r de vouloir supprimer le groupe '{group_name}' ?"):
             try:
                 with self.db.get_connection() as conn:
                     cursor = conn.cursor()
@@ -954,7 +954,7 @@ class AdminInterface:
                             cursor.execute("UPDATE physical_postes SET outputs = ? WHERE id = ?", (json.dumps(outs), pid))
                     cursor.execute("DELETE FROM console_groups WHERE id = ?", (group_id,))
                     conn.commit()
-                    messagebox.showinfo("Succès", f"Groupe '{group_name}' supprimé.")
+                    messagebox.showinfo("SuccÃ¨s", f"Groupe '{group_name}' supprimÃ©.")
                     self.load_console_groups()
                     self.clear_console_group_form()
                     self.load_console_group_names_for_combo()
@@ -1012,7 +1012,7 @@ class AdminInterface:
                 self.clear_console_group_form()
                 self.clear_tariffs_tree()
         except Exception as e:
-            messagebox.showerror("Erreur", f"Erreur sélection groupe: {e}")
+            messagebox.showerror("Erreur", f"Erreur sÃ©lection groupe: {e}")
             print("[DEBUG] on_console_group_select exception:", e)
 
     def _safe_load_tariffs_after_widget_ready(self, tariffs_json):
@@ -1079,7 +1079,7 @@ class AdminInterface:
         except Exception:
             sel = []
         if not sel:
-            messagebox.showerror("Erreur", "Veuillez sélectionner un groupe de consoles d'abord.")
+            messagebox.showerror("Erreur", "Veuillez sÃ©lectionner un groupe de consoles d'abord.")
             return
         selected_item = sel[0]
         montant = simpledialog.askinteger("Ajouter Tarif", "Montant (FCFA):", parent=self.root)
@@ -1089,7 +1089,7 @@ class AdminInterface:
         if minutes is None:
             return
         if montant <= 0 or minutes <= 0:
-            messagebox.showerror("Erreur", "Montant et minutes doivent être > 0.")
+            messagebox.showerror("Erreur", "Montant et minutes doivent Ãªtre > 0.")
             return
         group_id = self.console_groups_tree.item(selected_item, 'values')[0]
         try:
@@ -1102,7 +1102,7 @@ class AdminInterface:
         except Exception:
             tariffs = []
         if any(isinstance(t, dict) and t.get('montant') == montant for t in tariffs):
-            messagebox.showerror("Erreur", "Ce montant existe déjà dans la grille tarifaire.")
+            messagebox.showerror("Erreur", "Ce montant existe dÃ©jÃ  dans la grille tarifaire.")
             return
         tariffs.append({"montant": montant, "minutes": minutes})
         tariffs.sort(key=lambda x: x['montant'])
@@ -1113,7 +1113,7 @@ class AdminInterface:
                 conn.commit()
             self.console_groups_tree.item(selected_item, tags=(json.dumps(tariffs),))
             self.load_tariffs_for_group(json.dumps(tariffs))
-            messagebox.showinfo("Succès", "Tarif ajouté.")
+            messagebox.showinfo("SuccÃ¨s", "Tarif ajoutÃ©.")
         except Exception as e:
             messagebox.showerror("Erreur BD", f"Impossible d'ajouter le tarif: {e}")
             print("[DEBUG] add_tariff_entry exception:", e)
@@ -1128,13 +1128,13 @@ class AdminInterface:
         except Exception:
             tariff_sel = []
         if not group_sel or not tariff_sel:
-            messagebox.showerror("Erreur", "Veuillez sélectionner un groupe ET un tarif à modifier.")
+            messagebox.showerror("Erreur", "Veuillez sÃ©lectionner un groupe ET un tarif Ã  modifier.")
             return
         group_item = group_sel[0]
         tariff_item = tariff_sel[0]
         old_values = self.tariffs_tree.item(tariff_item, 'values')
         if not old_values:
-            messagebox.showerror("Erreur", "Impossible de récupérer le tarif sélectionné.")
+            messagebox.showerror("Erreur", "Impossible de rÃ©cupÃ©rer le tarif sÃ©lectionnÃ©.")
             return
         old_montant = old_values[0]
         try:
@@ -1145,10 +1145,10 @@ class AdminInterface:
             if new_minutes is None:
                 return
         except Exception:
-            messagebox.showerror("Erreur", "Entrée invalide.")
+            messagebox.showerror("Erreur", "EntrÃ©e invalide.")
             return
         if new_montant <= 0 or new_minutes <= 0:
-            messagebox.showerror("Erreur", "Montant et minutes doivent être > 0.")
+            messagebox.showerror("Erreur", "Montant et minutes doivent Ãªtre > 0.")
             return
         group_id = self.console_groups_tree.item(group_item, 'values')[0]
         try:
@@ -1162,7 +1162,7 @@ class AdminInterface:
             tariffs = []
         tariffs = [t for t in tariffs if not (isinstance(t, dict) and t.get('montant') == old_montant)]
         if any(isinstance(t, dict) and t.get('montant') == new_montant for t in tariffs):
-            messagebox.showerror("Erreur", "Le nouveau montant existe déjà dans la grille tarifaire.")
+            messagebox.showerror("Erreur", "Le nouveau montant existe dÃ©jÃ  dans la grille tarifaire.")
             return
         tariffs.append({"montant": new_montant, "minutes": new_minutes})
         tariffs.sort(key=lambda x: x['montant'])
@@ -1173,7 +1173,7 @@ class AdminInterface:
                 conn.commit()
             self.console_groups_tree.item(group_item, tags=(json.dumps(tariffs),))
             self.load_tariffs_for_group(json.dumps(tariffs))
-            messagebox.showinfo("Succès", "Tarif modifié.")
+            messagebox.showinfo("SuccÃ¨s", "Tarif modifiÃ©.")
         except Exception as e:
             messagebox.showerror("Erreur BD", f"Impossible de modifier le tarif: {e}")
             print("[DEBUG] update_tariff_entry exception:", e)
@@ -1188,7 +1188,7 @@ class AdminInterface:
         except Exception:
             tariff_sel = []
         if not group_sel or not tariff_sel:
-            messagebox.showerror("Erreur", "Veuillez sélectionner un groupe ET un tarif à supprimer.")
+            messagebox.showerror("Erreur", "Veuillez sÃ©lectionner un groupe ET un tarif Ã  supprimer.")
             return
         group_item = group_sel[0]
         tariff_item = tariff_sel[0]
@@ -1212,7 +1212,7 @@ class AdminInterface:
                     conn.commit()
                 self.console_groups_tree.item(group_item, tags=(json.dumps(tariffs),))
                 self.load_tariffs_for_group(json.dumps(tariffs))
-                messagebox.showinfo("Succès", "Tarif supprimé.")
+                messagebox.showinfo("SuccÃ¨s", "Tarif supprimÃ©.")
             except Exception as e:
                 messagebox.showerror("Erreur BD", f"Impossible de supprimer le tarif: {e}")
                 print("[DEBUG] delete_tariff_entry exception:", e)
@@ -1234,7 +1234,7 @@ class AdminInterface:
         except Exception:
             sel = []
         if not sel:
-            messagebox.showerror("Erreur", "Sélectionnez un groupe d'abord.")
+            messagebox.showerror("Erreur", "SÃ©lectionnez un groupe d'abord.")
             return
         selected_item = sel[0]
         try:
@@ -1254,21 +1254,21 @@ class AdminInterface:
                 conn.commit()
             self.console_groups_tree.item(selected_item, tags=(json.dumps(tariffs),))
             self.load_tariffs_for_group(json.dumps(tariffs))
-            messagebox.showinfo("Réordonné", "Tarifs réordonnés par montant.")
+            messagebox.showinfo("RÃ©ordonnÃ©", "Tarifs rÃ©ordonnÃ©s par montant.")
         except Exception as e:
-            messagebox.showerror("Erreur BD", f"Impossible de réordonner : {e}")
+            messagebox.showerror("Erreur BD", f"Impossible de rÃ©ordonner : {e}")
             print("[DEBUG] reorder_tariffs_current_group exception:", e)
 
     # ---------------- Physical postes ----------------
     def create_physical_postes_section(self, parent):
-        frame = ttk.LabelFrame(parent, text="🖥️ Gestion des Postes Physiques", style="Light.TLabelFrame")
+        frame = ttk.LabelFrame(parent, text="ðŸ–¥ï¸ Gestion des Postes Physiques", style="Light.TLabelFrame")
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
         poste_form_frame = ttk.Frame(frame, style="Light.TFrame")
         poste_form_frame.pack(fill=tk.X, pady=(0,10))
 
-        # numéro
-        ttk.Label(poste_form_frame, text="Numéro du Poste:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,5))
+        # numÃ©ro
+        ttk.Label(poste_form_frame, text="NumÃ©ro du Poste:", style="Light.TLabel").pack(side=tk.LEFT, padx=(0,5))
         self.poste_numero_entry = ttk.Entry(poste_form_frame, width=6)
         self.poste_numero_entry.pack(side=tk.LEFT, padx=(0,10))
         self.settings_entries['current_poste_numero'] = self.poste_numero_entry
@@ -1296,29 +1296,29 @@ class AdminInterface:
         # --- Boutons d'action du formulaire ---
         action_buttons_row = ttk.Frame(frame)
         action_buttons_row.pack(fill=tk.X, pady=(4,8))
-        self.add_poste_btn = ttk.Button(action_buttons_row, text="➕ Ajouter Poste", command=self.add_physical_poste, width=18)
+        self.add_poste_btn = ttk.Button(action_buttons_row, text="âž• Ajouter Poste", command=self.add_physical_poste, width=18)
         self.add_poste_btn.pack(side=tk.LEFT, padx=(4,6))
-        self.edit_poste_btn = ttk.Button(action_buttons_row, text="💾 Modifier Poste", command=self.update_physical_poste, width=18)
+        self.edit_poste_btn = ttk.Button(action_buttons_row, text="ðŸ’¾ Modifier Poste", command=self.update_physical_poste, width=18)
         self.edit_poste_btn.pack(side=tk.LEFT, padx=(4,6))
-        self.delete_poste_btn = ttk.Button(action_buttons_row, text="🗑️ Supprimer Poste", command=self.delete_physical_poste, width=18)
+        self.delete_poste_btn = ttk.Button(action_buttons_row, text="ðŸ—‘ï¸ Supprimer Poste", command=self.delete_physical_poste, width=18)
         self.delete_poste_btn.pack(side=tk.LEFT, padx=(4,6))
 
-        # Désactiver delete / edit tant qu'aucune sélection n'est faite
+        # DÃ©sactiver delete / edit tant qu'aucune sÃ©lection n'est faite
         self.delete_poste_btn.state(['disabled'])
         self.edit_poste_btn.state(['disabled'])
 
-        ttk.Label(poste_form_frame, text="(sélectionnez groupes pour les sorties via les combos)", style="Light.TLabel").pack(side=tk.LEFT, padx=(10,0))
+        ttk.Label(poste_form_frame, text="(sÃ©lectionnez groupes pour les sorties via les combos)", style="Light.TLabel").pack(side=tk.LEFT, padx=(10,0))
 
         # treeview for physical postes
         tree_container = ttk.Frame(frame)
         tree_container.pack(fill=tk.BOTH, expand=True, pady=(6,0))
-        self.physical_postes_tree = ttk.Treeview(tree_container, columns=("ID","Numéro","Nom","Sorties"), show="headings", selectmode="browse")
+        self.physical_postes_tree = ttk.Treeview(tree_container, columns=("ID","NumÃ©ro","Nom","Sorties"), show="headings", selectmode="browse")
         self.physical_postes_tree.heading("ID", text="ID", anchor=tk.W)
-        self.physical_postes_tree.heading("Numéro", text="Numéro", anchor=tk.W)
+        self.physical_postes_tree.heading("NumÃ©ro", text="NumÃ©ro", anchor=tk.W)
         self.physical_postes_tree.heading("Nom", text="Nom", anchor=tk.W)
-        self.physical_postes_tree.heading("Sorties", text="Sorties (détails)", anchor=tk.W)
+        self.physical_postes_tree.heading("Sorties", text="Sorties (dÃ©tails)", anchor=tk.W)
         self.physical_postes_tree.column("ID", width=40, stretch=tk.NO)
-        self.physical_postes_tree.column("Numéro", width=60, stretch=tk.NO)
+        self.physical_postes_tree.column("NumÃ©ro", width=60, stretch=tk.NO)
         self.physical_postes_tree.column("Nom", width=150, stretch=tk.YES)
         self.physical_postes_tree.column("Sorties", width=350, stretch=tk.YES)
         self.physical_postes_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -1400,7 +1400,7 @@ class AdminInterface:
                                 gname = ''
                         out_strings.append(f"[{typ} port:{sw} groupe:{gname}]")
                     if not out_strings:
-                        out_strings = ["(aucune sortie configurée)"]
+                        out_strings = ["(aucune sortie configurÃ©e)"]
                     self.physical_postes_tree.insert("", tk.END, values=(pid, numero, nom, " ".join(out_strings)), tags=(outputs_raw if outputs_raw else json.dumps([]),))
             if select_id:
                 for iid in self.physical_postes_tree.get_children():
@@ -1436,7 +1436,7 @@ class AdminInterface:
                     if result:
                         names.append(result[0])
         except Exception as e:
-            print(f"Erreur récupération noms de groupes: {e}")
+            print(f"Erreur rÃ©cupÃ©ration noms de groupes: {e}")
         return names
 
     def load_console_group_names_for_combo(self):
@@ -1499,25 +1499,25 @@ class AdminInterface:
                 "group_id": gid
             })
         if not numero_txt or not nom:
-            messagebox.showerror("Erreur", "Numéro et nom du poste sont requis.")
+            messagebox.showerror("Erreur", "NumÃ©ro et nom du poste sont requis.")
             return
         try:
             numero = int(numero_txt)
         except ValueError:
-            messagebox.showerror("Erreur", "Numéro du poste doit être un entier.")
+            messagebox.showerror("Erreur", "NumÃ©ro du poste doit Ãªtre un entier.")
             return
         try:
             with self.db.get_connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT COUNT(*) FROM physical_postes WHERE numero = ?", (numero,))
                 if cursor.fetchone()[0] > 0:
-                    messagebox.showerror("Erreur", f"Le poste numéro {numero} existe déjà.")
+                    messagebox.showerror("Erreur", f"Le poste numÃ©ro {numero} existe dÃ©jÃ .")
                     return
                 cursor.execute("INSERT INTO physical_postes (numero, nom, console_group_ids, switch_port, outputs) VALUES (?, ?, ?, ?, ?)",
                                (numero, nom, json.dumps([]), None, json.dumps(outputs)))
                 conn.commit()
                 last_id = cursor.lastrowid
-                messagebox.showinfo("Succès", f"Poste '{nom}' ajouté.")
+                messagebox.showinfo("SuccÃ¨s", f"Poste '{nom}' ajoutÃ©.")
                 self.clear_physical_poste_form()
                 self.load_physical_postes(select_id=last_id)
         except Exception as e:
@@ -1527,7 +1527,7 @@ class AdminInterface:
     def update_physical_poste(self):
         sel = self.physical_postes_tree.selection()
         if not sel:
-            messagebox.showerror("Erreur", "Veuillez sélectionner un poste à modifier.")
+            messagebox.showerror("Erreur", "Veuillez sÃ©lectionner un poste Ã  modifier.")
             return
         selected_item = sel[0]
         poste_id = self.physical_postes_tree.item(selected_item, 'values')[0]
@@ -1566,23 +1566,23 @@ class AdminInterface:
                 "group_id": gid
             })
         if not numero_txt or not nom:
-            messagebox.showerror("Erreur", "Numéro et nom du poste sont requis.")
+            messagebox.showerror("Erreur", "NumÃ©ro et nom du poste sont requis.")
             return
         try:
             numero = int(numero_txt)
         except ValueError:
-            messagebox.showerror("Erreur", "Numéro du poste doit être un entier.")
+            messagebox.showerror("Erreur", "NumÃ©ro du poste doit Ãªtre un entier.")
             return
         try:
             with self.db.get_connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT COUNT(*) FROM physical_postes WHERE numero = ? AND id != ?", (numero, poste_id))
                 if cursor.fetchone()[0] > 0:
-                    messagebox.showerror("Erreur", f"Le poste numéro {numero} existe déjà pour un autre ID.")
+                    messagebox.showerror("Erreur", f"Le poste numÃ©ro {numero} existe dÃ©jÃ  pour un autre ID.")
                     return
                 cursor.execute("UPDATE physical_postes SET numero = ?, nom = ?, outputs = ? WHERE id = ?", (numero, nom, json.dumps(outputs), poste_id))
                 conn.commit()
-                messagebox.showinfo("Succès", f"Poste '{nom}' modifié.")
+                messagebox.showinfo("SuccÃ¨s", f"Poste '{nom}' modifiÃ©.")
                 self.clear_physical_poste_form()
                 self.load_physical_postes(select_id=poste_id)
         except Exception as e:
@@ -1591,10 +1591,10 @@ class AdminInterface:
 
     def delete_physical_poste(self):
         """
-        - vérifie la sélection
+        - vÃ©rifie la sÃ©lection
         - convertit proprement l'ID
-        - exécute DELETE et teste cursor.rowcount
-        - rafraîchit la vue et nettoie le formulaire
+        - exÃ©cute DELETE et teste cursor.rowcount
+        - rafraÃ®chit la vue et nettoie le formulaire
         """
         try:
             sel = self.physical_postes_tree.selection()
@@ -1604,7 +1604,7 @@ class AdminInterface:
             # try fallback to focus
             focused = self.physical_postes_tree.focus()
             if not focused:
-                messagebox.showerror("Erreur", "Veuillez sélectionner un poste à supprimer.")
+                messagebox.showerror("Erreur", "Veuillez sÃ©lectionner un poste Ã  supprimer.")
                 return
             sel = (focused,)
 
@@ -1612,11 +1612,11 @@ class AdminInterface:
         try:
             vals = self.physical_postes_tree.item(selected_item, 'values')
             if not vals:
-                messagebox.showerror("Erreur", "Impossible de récupérer les informations du poste sélectionné.")
+                messagebox.showerror("Erreur", "Impossible de rÃ©cupÃ©rer les informations du poste sÃ©lectionnÃ©.")
                 return
             poste_id_raw = vals[0]
         except Exception:
-            messagebox.showerror("Erreur", "Impossible de récupérer l'ID du poste sélectionné.")
+            messagebox.showerror("Erreur", "Impossible de rÃ©cupÃ©rer l'ID du poste sÃ©lectionnÃ©.")
             return
 
         # try to coerce to int when possible
@@ -1634,7 +1634,7 @@ class AdminInterface:
         except Exception:
             poste_nom = str(poste_id)
 
-        if not messagebox.askyesno("Confirmer Suppression", f"Êtes-vous sûr de vouloir supprimer le poste '{poste_nom}' ?"):
+        if not messagebox.askyesno("Confirmer Suppression", f"ÃŠtes-vous sÃ»r de vouloir supprimer le poste '{poste_nom}' ?"):
             return
 
         try:
@@ -1649,7 +1649,7 @@ class AdminInterface:
                         conn.commit()
                     except Exception:
                         pass
-                messagebox.showinfo("Succès", f"Poste '{poste_nom}' supprimé.")
+                messagebox.showinfo("SuccÃ¨s", f"Poste '{poste_nom}' supprimÃ©.")
                 # refresh
                 self.clear_physical_poste_form()
                 self.load_physical_postes()
@@ -1659,7 +1659,7 @@ class AdminInterface:
 
     def _on_physical_tree_select_enable_buttons(self, event):
         """
-        Lorsqu'on sélectionne une ligne dans la Treeview des postes physiques,
+        Lorsqu'on sÃ©lectionne une ligne dans la Treeview des postes physiques,
         on active les boutons Modifier / Supprimer pour que l'utilisateur voie
         qu'ils sont disponibles.
         """
@@ -1670,7 +1670,7 @@ class AdminInterface:
                 self.edit_poste_btn.state(['!disabled'])
             except Exception:
                 pass
-            # remplir le formulaire avec les données de la sélection
+            # remplir le formulaire avec les donnÃ©es de la sÃ©lection
             self.on_physical_poste_select(event)
         else:
             try:
@@ -1729,7 +1729,7 @@ class AdminInterface:
                                 except Exception:
                                     pass
             except Exception as e:
-                messagebox.showerror("Erreur BD", f"Impossible de récupérer les détails du poste: {e}")
+                messagebox.showerror("Erreur BD", f"Impossible de rÃ©cupÃ©rer les dÃ©tails du poste: {e}")
                 print("[DEBUG] on_physical_poste_select exception:", e)
 
     # ---------------- User management functions ----------------
@@ -1754,11 +1754,11 @@ class AdminInterface:
                 cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT, role TEXT)")
                 cursor.execute("SELECT COUNT(*) FROM users WHERE LOWER(username) = ?", (username.lower(),))
                 if cursor.fetchone()[0] > 0:
-                    messagebox.showerror("Erreur", "Ce nom d'utilisateur existe déjà.")
+                    messagebox.showerror("Erreur", "Ce nom d'utilisateur existe dÃ©jÃ .")
                     return
                 cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, hashed, role))
                 conn.commit()
-            messagebox.showinfo("Succès", f"Utilisateur '{username}' créé.")
+            messagebox.showinfo("SuccÃ¨s", f"Utilisateur '{username}' crÃ©Ã©.")
             self.clear_user_form()
             self.load_users()
         except Exception as e:
@@ -1768,12 +1768,12 @@ class AdminInterface:
     def update_user(self):
         sel = self.users_tree.selection()
         if not sel:
-            messagebox.showerror("Erreur", "Sélectionnez un utilisateur à modifier.")
+            messagebox.showerror("Erreur", "SÃ©lectionnez un utilisateur Ã  modifier.")
             return
         user_item = sel[0]
         vals = self.users_tree.item(user_item, 'values')
         if not vals:
-            messagebox.showerror("Erreur", "Impossible de récupérer l'utilisateur sélectionné.")
+            messagebox.showerror("Erreur", "Impossible de rÃ©cupÃ©rer l'utilisateur sÃ©lectionnÃ©.")
             return
         user_id = vals[0]
         username = self.username_entry.get().strip()
@@ -1789,7 +1789,7 @@ class AdminInterface:
                 cursor.execute("SELECT id FROM users WHERE LOWER(username) = ?", (username.lower(),))
                 row = cursor.fetchone()
                 if row and str(row[0]) != str(user_id):
-                    messagebox.showerror("Erreur", "Ce nom d'utilisateur est déjà utilisé par un autre compte.")
+                    messagebox.showerror("Erreur", "Ce nom d'utilisateur est dÃ©jÃ  utilisÃ© par un autre compte.")
                     return
                 if password:
                     try:
@@ -1800,7 +1800,7 @@ class AdminInterface:
                 else:
                     cursor.execute("UPDATE users SET username = ?, role = ? WHERE id = ?", (username, role, user_id))
                 conn.commit()
-            messagebox.showinfo("Succès", "Utilisateur modifié.")
+            messagebox.showinfo("SuccÃ¨s", "Utilisateur modifiÃ©.")
             self.clear_user_form()
             self.load_users()
         except Exception as e:
@@ -1810,12 +1810,12 @@ class AdminInterface:
     def delete_user(self):
         sel = self.users_tree.selection()
         if not sel:
-            messagebox.showerror("Erreur", "Sélectionnez un utilisateur à supprimer.")
+            messagebox.showerror("Erreur", "SÃ©lectionnez un utilisateur Ã  supprimer.")
             return
         user_item = sel[0]
         vals = self.users_tree.item(user_item, 'values')
         if not vals:
-            messagebox.showerror("Erreur", "Impossible de récupérer l'utilisateur sélectionné.")
+            messagebox.showerror("Erreur", "Impossible de rÃ©cupÃ©rer l'utilisateur sÃ©lectionnÃ©.")
             return
         user_id = vals[0]
         username = vals[1] if len(vals) > 1 else str(user_id)
@@ -1826,7 +1826,7 @@ class AdminInterface:
                 cursor = conn.cursor()
                 cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
                 conn.commit()
-            messagebox.showinfo("Succès", f"Utilisateur '{username}' supprimé.")
+            messagebox.showinfo("SuccÃ¨s", f"Utilisateur '{username}' supprimÃ©.")
             self.clear_user_form()
             self.load_users()
         except Exception as e:
@@ -1904,8 +1904,8 @@ class AdminInterface:
 
     def load_settings_for_current_section(self):
         """
-        Remplit les widgets de configuration visibles avec les valeurs stockées en base.
-        Cette fonction est appelée chaque fois qu'une section/sous-section est affichée.
+        Remplit les widgets de configuration visibles avec les valeurs stockÃ©es en base.
+        Cette fonction est appelÃ©e chaque fois qu'une section/sous-section est affichÃ©e.
         """
         try:
             # generic: currency
@@ -2013,7 +2013,7 @@ class AdminInterface:
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
         # Header
-        header = ttk.Label(frame, text="🎁 Bonus Simples - Paramètres", style="SectionTitle.TLabel")
+        header = ttk.Label(frame, text="ðŸŽ Bonus Simples - ParamÃ¨tres", style="SectionTitle.TLabel")
         header.pack(anchor=tk.W, pady=(0,6))
 
         # --- Block: Bonus de jeux ---
@@ -2039,7 +2039,7 @@ class AdminInterface:
         ttk.Label(rnd_frame, text="Arrondi:", style="Light.TLabel").pack(side=tk.LEFT)
         self.bonus_rounding_combo = ttk.Combobox(rnd_frame, values=["floor", "ceil", "none"], width=10, state="readonly")
         self.bonus_rounding_combo.pack(side=tk.LEFT, padx=(6,8))
-        ttk.Label(rnd_frame, text="(floor: arrondir à l'inférieur)", style="Light.TLabel").pack(side=tk.LEFT)
+        ttk.Label(rnd_frame, text="(floor: arrondir Ã  l'infÃ©rieur)", style="Light.TLabel").pack(side=tk.LEFT)
 
         # apply on
         apply_frame = ttk.Frame(games_frame)
@@ -2066,13 +2066,13 @@ class AdminInterface:
         hist_btn_frame = ttk.Frame(games_frame)
         hist_btn_frame.pack(fill=tk.X, padx=8, pady=(2,6))
         ttk.Button(hist_btn_frame, text="Voir historique global (Bonus)", command=self._open_bonus_history_view).pack(side=tk.LEFT)
-        ttk.Button(hist_btn_frame, text="Exporter (CSV)", command=lambda: messagebox.showinfo("Exporter", "Fonction Export à implémenter si besoin.")).pack(side=tk.LEFT, padx=(6,0))
+        ttk.Button(hist_btn_frame, text="Exporter (CSV)", command=lambda: messagebox.showinfo("Exporter", "Fonction Export Ã  implÃ©menter si besoin.")).pack(side=tk.LEFT, padx=(6,0))
 
         # --- Block: Bonus de bienvenue ---
         welcome_frame = ttk.LabelFrame(frame, text="Bonus de bienvenue", style="Light.TLabelFrame")
         welcome_frame.pack(fill=tk.X, pady=(6,10))
         self.welcome_enabled_var = tk.IntVar(value=1)
-        ttk.Checkbutton(welcome_frame, text="Activer bonus de bienvenue (à la 1ère inscription)", variable=self.welcome_enabled_var).pack(anchor=tk.W, padx=8, pady=(6,2))
+        ttk.Checkbutton(welcome_frame, text="Activer bonus de bienvenue (Ã  la 1Ã¨re inscription)", variable=self.welcome_enabled_var).pack(anchor=tk.W, padx=8, pady=(6,2))
         wm_frame = ttk.Frame(welcome_frame)
         wm_frame.pack(fill=tk.X, padx=8, pady=(4,6))
         ttk.Label(wm_frame, text="Minutes offertes:", style="Light.TLabel").pack(side=tk.LEFT)
@@ -2082,11 +2082,11 @@ class AdminInterface:
 
         welcome_btn_frame = ttk.Frame(welcome_frame)
         welcome_btn_frame.pack(fill=tk.X, padx=8, pady=(6,6))
-        ttk.Button(welcome_btn_frame, text="Sauvegarder paramètres Bonus", command=self._save_bonus_simples_settings).pack(side=tk.LEFT)
-        ttk.Button(welcome_btn_frame, text="Appliquer manuellement à un utilisateur", command=self._apply_welcome_to_user).pack(side=tk.LEFT, padx=(8,6))
+        ttk.Button(welcome_btn_frame, text="Sauvegarder paramÃ¨tres Bonus", command=self._save_bonus_simples_settings).pack(side=tk.LEFT)
+        ttk.Button(welcome_btn_frame, text="Appliquer manuellement Ã  un utilisateur", command=self._apply_welcome_to_user).pack(side=tk.LEFT, padx=(8,6))
 
         # info / disclaimer
-        ttk.Label(frame, text="Les minutes bonus sont cumulables et (par défaut) n'expirent pas. Les crédits/débits manuels sont enregistrés dans l'historique.", style="Light.TLabel").pack(anchor=tk.W, pady=(6,4), padx=6)
+        ttk.Label(frame, text="Les minutes bonus sont cumulables et (par dÃ©faut) n'expirent pas. Les crÃ©dits/dÃ©bits manuels sont enregistrÃ©s dans l'historique.", style="Light.TLabel").pack(anchor=tk.W, pady=(6,4), padx=6)
 
         # load values from config into widgets
         self.load_settings_for_current_section()
@@ -2145,16 +2145,16 @@ class AdminInterface:
                 uid = int(uid_txt) if uid_txt else None
                 limit = int(limit_entry.get())
             except Exception:
-                messagebox.showerror("Erreur", "Paramètres invalides.")
+                messagebox.showerror("Erreur", "ParamÃ¨tres invalides.")
                 return
             try:
                 rows = self.bonus_manager.list_bonus_history(user_id=uid, limit=limit, offset=0)
             except Exception as e:
-                messagebox.showerror("Erreur", f"Impossible de récupérer l'historique : {e}")
+                messagebox.showerror("Erreur", f"Impossible de rÃ©cupÃ©rer l'historique : {e}")
                 return
             text.delete("1.0", tk.END)
             if not rows:
-                text.insert(tk.END, "Aucune transaction trouvée.\n")
+                text.insert(tk.END, "Aucune transaction trouvÃ©e.\n")
                 return
             for r in rows:
                 text.insert(tk.END, f"{r['created_at']} | user:{r['user_id']} | delta:{r['minutes_delta']} | source:{r['source']} | balance_after:{r.get('balance_after')} | ref:{r.get('reference')} | notes:{r.get('notes')}\n")
@@ -2178,7 +2178,7 @@ class AdminInterface:
                     ival = int(val)
                     self._set_config("bonus_fcfa_per_minute", str(ival))
                 except Exception:
-                    messagebox.showerror("Erreur", "Valeur FCFA par minute invalide (doit être un entier).")
+                    messagebox.showerror("Erreur", "Valeur FCFA par minute invalide (doit Ãªtre un entier).")
                     return
             # rounding
             if getattr(self, "bonus_rounding_combo", None):
@@ -2206,16 +2206,16 @@ class AdminInterface:
                     messagebox.showerror("Erreur", "Minutes de bienvenue invalides (entier).")
                     return
 
-            messagebox.showinfo("Succès", "Paramètres Bonus Simples sauvegardés.")
+            messagebox.showinfo("SuccÃ¨s", "ParamÃ¨tres Bonus Simples sauvegardÃ©s.")
             # reload into manager if possible
             try:
                 if self.bonus_manager:
-                    # si nécessaire, on peut demander au manager d'actualiser quoique ce soit;
+                    # si nÃ©cessaire, on peut demander au manager d'actualiser quoique ce soit;
                     pass
             except Exception:
                 pass
         except Exception as e:
-            messagebox.showerror("Erreur", f"Impossible de sauvegarder les paramètres : {e}")
+            messagebox.showerror("Erreur", f"Impossible de sauvegarder les paramÃ¨tres : {e}")
             print("[DEBUG] _save_bonus_simples_settings exception:", e)
 
     def _apply_welcome_to_user(self):
@@ -2228,9 +2228,9 @@ class AdminInterface:
                 return
             minutes_added = self.bonus_manager.apply_welcome_bonus_on_registration(user_id, operator_id=self.user_id)
             if minutes_added > 0:
-                messagebox.showinfo("Succès", f"{minutes_added} minutes de bienvenue ajoutées à l'utilisateur {user_id}.")
+                messagebox.showinfo("SuccÃ¨s", f"{minutes_added} minutes de bienvenue ajoutÃ©es Ã  l'utilisateur {user_id}.")
             else:
-                messagebox.showinfo("Info", "Aucun bonus appliqué (déjà attribué ou désactivé).")
+                messagebox.showinfo("Info", "Aucun bonus appliquÃ© (dÃ©jÃ  attribuÃ© ou dÃ©sactivÃ©).")
         except Exception as e:
             messagebox.showerror("Erreur", f"Impossible d'appliquer le bonus : {e}")
             print("[DEBUG] _apply_welcome_to_user exception:", e)
@@ -2270,16 +2270,16 @@ class AdminInterface:
                 if std is not None:
                     save_param("standard_tariff_fcfa_per_6min", std)
                 conn.commit()
-                messagebox.showinfo("Succès", "Tous les paramètres ont été sauvegardés avec succès.")
-                self.status_label.config(text="Paramètres généraux mis à jour.")
+                messagebox.showinfo("SuccÃ¨s", "Tous les paramÃ¨tres ont Ã©tÃ© sauvegardÃ©s avec succÃ¨s.")
+                self.status_label.config(text="ParamÃ¨tres gÃ©nÃ©raux mis Ã  jour.")
                 self._refresh_currency_combobox()
                 self._refresh_serialport_combobox()
         except Exception as e:
-            messagebox.showerror("Erreur BD", f"Impossible de sauvegarder les paramètres: {e}")
+            messagebox.showerror("Erreur BD", f"Impossible de sauvegarder les paramÃ¨tres: {e}")
             print("[DEBUG] save_general_settings exception:", e)
 
     def logout(self):
-        if messagebox.askyesno("Déconnexion", "Êtes-vous sûr de vouloir vous déconnecter de l'administration ?"):
+        if messagebox.askyesno("DÃ©connexion", "ÃŠtes-vous sÃ»r de vouloir vous dÃ©connecter de l'administration ?"):
             self.on_closing()
             try:
                 from interfaces.login import LoginWindow
@@ -2293,12 +2293,124 @@ class AdminInterface:
             self.root.destroy()
         except:
             pass
+    # ---------------- Tickets de fidélité ----------------
+    def create_tickets_section(self, parent):
+        frame = ttk.LabelFrame(parent, text="🎫 Tickets de Fidélité", style="Light.TLabelFrame")
+        frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-    def run(self):
+        btn_row = ttk.Frame(frame)
+        btn_row.pack(fill=tk.X, pady=(0,6))
+        ttk.Button(btn_row, text="↻ Rafraîchir", command=lambda: self.load_tickets()).pack(side=tk.LEFT, padx=(0,6))
+        ttk.Button(btn_row, text="➕ Ajouter Ticket", command=lambda: self.add_ticket_dialog()).pack(side=tk.LEFT, padx=(0,6))
+        ttk.Button(btn_row, text="🗑️ Supprimer sélection", command=lambda: self.delete_selected_ticket()).pack(side=tk.LEFT, padx=(0,6))
+        ttk.Button(btn_row, text="⬇️ Export CSV", command=lambda: self.export_tickets_csv()).pack(side=tk.LEFT, padx=(0,6))
+
+        columns = ("id","user_id","ticket_date","amount_fcfa","created_at","notes")
+        self.tickets_tree = ttk.Treeview(frame, columns=columns, show="headings", style="White.Treeview")
+        for col in columns:
+            self.tickets_tree.heading(col, text=col)
+            self.tickets_tree.column(col, width=120, stretch=tk.YES)
+        self.tickets_tree.pack(fill=tk.BOTH, expand=True)
+        self.tickets_tree.bind("<<TreeviewSelect>>", self.on_ticket_select)
+
+        # charge initial
+        self.load_tickets()
+
+    def load_tickets(self, limit=500):
+        try:
+            for it in self.tickets_tree.get_children():
+                self.tickets_tree.delete(it)
+        except Exception:
+            pass
+        try:
+            with self.db.get_connection() as conn:
+                cur = conn.cursor()
+                cur.execute("""SELECT id, user_id, ticket_date, amount_fcfa, created_at, IFNULL(notes, '') 
+                               FROM tickets_fidelite ORDER BY ticket_date DESC, created_at DESC LIMIT ?""", (limit,))
+                rows = cur.fetchall()
+                for r in rows:
+                    self.tickets_tree.insert("", tk.END, values=r)
+            self.status_label.config(text=f"Chargé {len(rows)} tickets de fidélité")
+        except Exception as e:
+            messagebox.showerror("Erreur BD", f"Impossible de charger tickets: {e}")
+            print("[DEBUG] load_tickets exception:", e)
+
+    def on_ticket_select(self, event):
+        # placeholder si besoin d'action quand sélection change
+        sel = self.tickets_tree.selection()
+        if sel:
+            vals = self.tickets_tree.item(sel[0], "values")
+            # vals -> (id,user_id,ticket_date,amount_fcfa,created_at,notes)
+            self.status_label.config(text=f"Ticket sélectionné id={vals[0]} user={vals[1]} date={vals[2]}")
+
+    def add_ticket_dialog(self):
+        try:
+            user_s = simpledialog.askstring("Ajouter ticket", "ID utilisateur (user_id) :")
+            if not user_s:
+                return
+            user_id = int(user_s)
+            date_s = simpledialog.askstring("Ajouter ticket", "Date (YYYY-MM-DD) :", initialvalue=str(date.today()))
+            if not date_s:
+                return
+            amount_s = simpledialog.askstring("Ajouter ticket", "Montant (FCFA) :", initialvalue="100")
+            if not amount_s:
+                return
+            amount = int(amount_s)
+            with self.db.get_connection() as conn:
+                cur = conn.cursor()
+                cur.execute("""INSERT OR IGNORE INTO tickets_fidelite (user_id, ticket_date, source, created_at, amount_fcfa)
+                               VALUES (?, ?, ?, datetime('now'), ?)""", (user_id, date_s, "admin", amount))
+                conn.commit()
+            messagebox.showinfo("Succès", "Ticket inséré (ou déjà existant pour ce jour).")
+            self.load_tickets()
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Impossible d'ajouter ticket: {e}")
+            print("[DEBUG] add_ticket_dialog exception:", e)
+
+    def delete_selected_ticket(self):
+        sel = self.tickets_tree.selection()
+        if not sel:
+            messagebox.showerror("Erreur", "Sélectionnez un ticket à supprimer.")
+            return
+        vals = self.tickets_tree.item(sel[0], "values")
+        tid = vals[0]
+        if not messagebox.askyesno("Confirmer", f"Supprimer le ticket id={tid} ?"):
+            return
+        try:
+            with self.db.get_connection() as conn:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM tickets_fidelite WHERE id = ?", (tid,))
+                conn.commit()
+            messagebox.showinfo("Succès", "Ticket supprimé.")
+            self.load_tickets()
+        except Exception as e:
+            messagebox.showerror("Erreur BD", f"Impossible de supprimer: {e}")
+            print("[DEBUG] delete_selected_ticket exception:", e)
+
+    def export_tickets_csv(self):
+        try:
+            fname = filedialog.asksaveasfilename(title="Exporter tickets CSV", defaultextension=".csv", filetypes=[("CSV files","*.csv")])
+            if not fname:
+                return
+            with self.db.get_connection() as conn:
+                cur = conn.cursor()
+                cur.execute("SELECT id, user_id, ticket_date, amount_fcfa, created_at, IFNULL(notes,'') FROM tickets_fidelite ORDER BY ticket_date DESC")
+                rows = cur.fetchall()
+            import csv
+            with open(fname, "w", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+                writer.writerow(["id","user_id","ticket_date","amount_fcfa","created_at","notes"])
+                writer.writerows(rows)
+            messagebox.showinfo("Export", f"Exporté {len(rows)} lignes vers {fname}")
+        except Exception as e:
+            messagebox.showerror("Erreur export", f"Impossible d'exporter: {e}")
+            print("[DEBUG] export_tickets_csv exception:", e)
+ run(self):
         self.root.mainloop()
 
 
 if __name__ == "__main__":
     app = AdminInterface(user_id=1)
     app.run()
+
 
